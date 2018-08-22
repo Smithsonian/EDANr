@@ -1,0 +1,13 @@
+Package: EDANr
+Type: Package
+Title: Query the EDAN API
+Version: 0.1
+Date: 2018-08-22
+Authors@R: person("Luis J", "Villanueva", email = "villanueval@si.edu",
+                  role = c("aut", "cre"))
+Description: R package to query the Smithsonian's EDAN API.
+License: CC0
+Encoding: UTF-8
+Depends: R(>= 3.2.0)
+Imports: httr, uuid, stringr, jsonlite, digest, openssl
+RoxygenNote: 6.0.1

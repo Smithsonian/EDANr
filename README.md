@@ -1,2 +1,3 @@
 # EDANr
-Query EDAN from R
+
+A package to query EDAN from R
