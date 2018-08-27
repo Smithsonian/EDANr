@@ -38,7 +38,7 @@ searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0){
   Nonce <- substr(stringr::str_replace_all(uuid::UUIDgenerate(FALSE), "-", ""), 0, 24)
 
   #Your request (example of format to enter query parameters)
-  QueryParameters <- paste0("q=", query, "&rows=", rows, "&start=", start)
+  QueryParameters <- paste0("q=", query, "&rows=", rows, "&start=", start, "&facet=true")
 
   #This will be the value of X-AuthContent, each element is joined by a single newline
   StringToSign <- paste(Nonce, QueryParameters, RequestDate, AppKey, sep = "\n")
