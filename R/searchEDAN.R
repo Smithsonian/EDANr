@@ -22,7 +22,7 @@
 #' @importFrom httr content
 
 #' 
-searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0){
+searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE){
   
   if (rows > 100){
     warning("rows has been set to the maximum: 100")
@@ -67,7 +67,12 @@ searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0){
     print(r$headers)
     results <- ""
   }else{
-    results <- jsonlite::fromJSON(httr::content(r, "text"))
+    if (returnjson){
+      results <- httr::content(r, "text")
+    }else{
+      results <- jsonlite::fromJSON(httr::content(r, "text"))
+    }
+      
   }
   
   return(results)
