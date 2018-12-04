@@ -10,9 +10,9 @@ To install from Github:
 #Install devtools, if needed
 install.packages("devtools")
 
-#Install package from Github
+#Install package from Github, with vignettes
 library(devtools)
-install_github("Smithsonian/EDANr")
+install_github("Smithsonian/EDANr", build_vignettes = TRUE)
 ```
 
 EDANr requires the packages httr, uuid, stringr, jsonlite, digest, and openssl. These should be installed automatically when using `install_github("Smithsonian/EDANr")`. To install these manually:

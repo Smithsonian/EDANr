@@ -1,0 +1,182 @@
+---
+title: "Searching for Images from DPO Mass Digitization Project"
+author: "Luis J. Villanueva"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Searching for Images from DPO Mass Digitization Project}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+OCIO's Digitization Program Office completed a Mass Digitization project of the Living Orchid Collection of Smithsonian Gardens. As part of a new effort to showcase our projects, we used EDANr to search for the images taken during this project. When a plant had flowers, a close-up photograph of the flower was taken. These close-ups were downloaded using EDANr to display in 4k resolution displays at the DPO office. This vignette summarizes the process:
+
+1. Query EDAN for the specimens in the collection
+1. Look for images taken by the contractor in the project
+1. Download the close-up images
+1. Resize the images to 4k and add text with general information to the images
+
+Article in [Smithsonian Insider](https://insider.si.edu/2018/08/see-thousands-of-orchids-in-incredible-detail-in-the-smithsonians-newly-digitized-collection/) about the digitization project. 
+
+## Query EDAN for the specimens in the collection
+
+Add the AppID and AppKey, load packages, other misc steps:
+
+```{r, eval=FALSE}
+#EDAN creds
+AppID = "APP_ID"
+AppKey = "verylong_key"
+
+#Required packages
+library(c("EDANr", "magick", "stringr"))
+
+#Create folders to store images
+#Horizontal images
+dir.create("images_w", showWarnings = FALSE)
+#Vertical images
+dir.create("images_v", showWarnings = FALSE)
+```
+
+Run the query, first to get the total number of results EDAN has:
+
+```{r, eval=FALSE}
+#EDAN query
+orchids_query <- "orchid+smithsonian+gardens&fq=online_media_type:\"Images\""
+
+#Query EDAN to get number of results
+results <- EDANr::searchEDAN(query = orchids_query, 
+                             AppID = AppID, 
+                             AppKey = AppKey, 
+                             rows = 1, 
+                             start = 0)
+
+#Store number of results in EDAN
+results_count <- results$rowCount
+
+#Calculate the number of steps needed to get all the results,
+# in steps of 100 rows each, the maximum the API returns
+steps <- floor(results_count/100)
+```
+
+Then, loop over the results in steps of 100 results. 
+
+```{r, eval=FALSE}
+#Loop over each step, getting all the images
+for (i in seq(0, steps)){
+  #Query to get the next 100 results
+  results <- EDANr::searchEDAN(query = orchids_query, 
+                               AppID = AppID, 
+                               AppKey = AppKey, 
+                               rows = 100, 
+                               start = (i*100))
+  
+  #If there are results in this step
+  if (!is.null(dim(results$rows))){
+    
+    #Loop over each result in this step
+    for (j in seq(1, dim(results$rows)[1])){
+      #
+      #See code below
+      #
+    }
+  }
+}
+```
+
+## Look for images taken by the vendor
+
+Get the images of the j-th row:
+
+```{r, eval=FALSE}
+#Get images, available from IDS
+ids_images <- results$rows$content$descriptiveNonRepeating$online_media$media[j][[1]]
+
+#Filter for images that were taken by the contractor
+which_image <- ids_images[stringr::str_which(ids_images$caption, "Creekside Digital"),]
+
+#Select the close-up image of the flowers of the plant, coded with '102' in the filename
+which_image_detail <- which_image[stringr::str_which(ids_images$idsId, "102"),]
+```
+
+## Download the close-up images
+
+```{r, eval=FALSE}
+#Get image URL
+image <- which_image_detail$content[1]
+
+#Get image ID
+idsID <- which_image_detail$idsId[1]
+
+#Download the image
+localimage <- paste0(idsID, ".jpg")
+dlfile <- try(download.file(url = image, 
+                            destfile = localimage, 
+                            mode = "wb"), 
+              silent = TRUE)
+```
+
+## Resize and add text with general information to the images
+
+Get the info to write to the image:
+
+```{r, eval=FALSE}
+#Read image to find size
+img <- image_read(localimage)
+img_info <- image_info(img)
+
+if (img_info$width > img_info$height){
+  #Horizontal, resize to 3840x2160
+  img_scaled <- image_scale(img, "3840x2160")
+}else{
+  #Vertical, resize to 2160x3840
+  img_scaled <- image_scale(img, "2160x3840")
+}
+
+#Get image title, which contains the name of the specimen
+img_title <- results$rows$title[j]
+
+#If title is too long, break in two lines
+if (nchar(img_title) > 30){
+  img_title1 <- strsplit(img_title, " ")[[1]]
+  spl_no <- floor(length(img_title1)/2)
+  
+  img_title_1 <- paste(img_title1[1:spl_no], 
+                       collapse = " ")
+  img_title_2 <- paste(img_title1[spl_no+1:(length(img_title1) - spl_no)], 
+                       collapse = " ")
+  img_title <- paste0(img_title_1, 
+                      "\n   ", 
+                      img_title_2)
+}
+
+#Get common name of plant, if available
+common_name <- unlist(results$rows$content$indexedStructured$common_name[j])[[1]]
+if (!is.null(common_name)){
+  title <- paste0(common_name, "\n", img_title)
+}
+
+#Add the accession number
+title <- paste0(title, 
+                "\nAccession Number: ", 
+                results$rows$content$freetext$identifier[j][[1]]$content, 
+                "\nSmithsonian Gardens")
+
+#Write the info
+img_ready <- image_annotate(img_scaled, 
+                            title, 
+                            font = 'Arial', 
+                            size = 60, 
+                            color = "white", 
+                            gravity = "SouthWest")
+
+if (img_info$width > img_info$height){
+  #Image is wide, store in Horizontal folder
+  image_write(img_ready, path = localimage_w, format = "jpg")
+}else{
+  #Image is tall, store in Vertical folder
+  image_write(img_ready, path = localimage_v, format = "jpg")
+}
+
+#Delete original image
+file.remove(localimage)
+```
