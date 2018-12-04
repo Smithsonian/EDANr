@@ -1,15 +1,15 @@
 #' Searches EDAN
 #' 
-#'Function to search the EDAN API. 
+#'Search metadata in the EDAN API. 
 #'
-#' @return JSON with the results.
+#' @return List or JSON with the results.
 #'
 #' @param query Query to run
-#' @param AppID AppID
-#' @param AppKey Key for the App ID
-#' @param rows Number of rows to return, max is 100
+#' @param AppID AppID used for authentication
+#' @param AppKey Key for the AppID used for authentication
+#' @param rows Number of rows to return, max is 100.
 #' @param start Start number, to use with rows
-#'
+#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.
 #'
 #' @export
 #' @importFrom httr GET
@@ -25,11 +25,11 @@
 searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE){
   
   if (rows > 100){
-    warning("rows has been set to the maximum: 100")
+    warning("The number of rows has been set to the maximum allowed of 100")
     rows <- 100
   }
   
-  API_url <- 'http://edan.si.edu/'
+  API_url <- 'https://edan.si.edu/'
 
   #Date of request
   RequestDate <- as.character(Sys.time())
@@ -59,7 +59,6 @@ searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = 
                              "X-AuthContent"= EncodedString)
   )
   
-  
   if (r$status_code == 401){
     cat("\n\n============\nRequest:\n============\n")
     print(r$request)
@@ -68,11 +67,10 @@ searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = 
     results <- ""
   }else{
     if (returnjson){
-      results <- httr::content(r, "text")
+      results <- jsonlite::prettify(httr::content(r, "text"))
     }else{
       results <- jsonlite::fromJSON(httr::content(r, "text"))
     }
-      
   }
   
   return(results)

@@ -4,22 +4,24 @@
 \alias{searchEDAN}
 \title{Searches EDAN}
 \usage{
-searchEDAN(query, AppID, AppKey, rows = 10, start = 0)
+searchEDAN(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE)
 }
 \arguments{
 \item{query}{Query to run}
 
-\item{AppID}{AppID}
+\item{AppID}{AppID used for authentication}
 
-\item{AppKey}{Key for the App ID}
+\item{AppKey}{Key for the AppID used for authentication}
 
-\item{rows}{Number of rows to return, max is 100}
+\item{rows}{Number of rows to return, max is 100.}
 
 \item{start}{Start number, to use with rows}
+
+\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.}
 }
 \value{
-JSON with the results.
+List or JSON with the results.
 }
 \description{
-Function to search the EDAN API.
+Search metadata in the EDAN API.
 }

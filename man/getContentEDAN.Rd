@@ -4,18 +4,20 @@
 \alias{getContentEDAN}
 \title{Get details of an item}
 \usage{
-getContentEDAN(itemID, AppID, AppKey)
+getContentEDAN(itemID, AppID, AppKey, returnjson = FALSE)
 }
 \arguments{
 \item{itemID}{ID of the item}
 
-\item{AppID}{AppID}
+\item{AppID}{AppID used for authentication}
 
-\item{AppKey}{Key for the App ID}
+\item{AppKey}{Key for the AppID used for authentication}
+
+\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.}
 }
 \value{
-JSON with the details of the item.
+List or JSON with the details of the item.
 }
 \description{
-Function to check the details of an item from the EDAN API.
+Get the details of an item from the EDAN API.
 }

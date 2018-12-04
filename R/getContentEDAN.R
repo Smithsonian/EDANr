@@ -1,12 +1,13 @@
 #' Get details of an item
 #' 
-#'Function to check the details of an item from the EDAN API. 
+#'Get the details of an item from the EDAN API.
 #'
-#' @return JSON with the details of the item.
+#' @return List or JSON with the details of the item.
 #'
 #' @param itemID ID of the item
-#' @param AppID AppID
-#' @param AppKey Key for the App ID
+#' @param AppID AppID used for authentication
+#' @param AppKey Key for the AppID used for authentication
+#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.
 #'
 #'
 #' @export
@@ -19,9 +20,9 @@
 #' @importFrom httr add_headers
 #' @importFrom httr content
 #' 
-getContentEDAN <- function(itemID, AppID, AppKey){
+getContentEDAN <- function(itemID, AppID, AppKey, returnjson = FALSE){
   
-  API_url <- 'http://edan.si.edu/'
+  API_url <- 'https://edan.si.edu/'
 
   #Date of request
   RequestDate <- as.character(Sys.time())
@@ -59,7 +60,12 @@ getContentEDAN <- function(itemID, AppID, AppKey){
     print(r$headers)
     results <- ""
   }else{
-    results <- jsonlite::fromJSON(httr::content(r, "text"))
+    #results <- jsonlite::fromJSON(httr::content(r, "text"))
+    if (returnjson){
+      results <- jsonlite::prettify(httr::content(r, "text"))
+    }else{
+      results <- jsonlite::fromJSON(httr::content(r, "text"))
+    }
   }
   
   return(results)
