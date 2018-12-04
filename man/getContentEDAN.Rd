@@ -13,11 +13,14 @@ getContentEDAN(itemID, AppID, AppKey, returnjson = FALSE)
 
 \item{AppKey}{Key for the AppID used for authentication}
 
-\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.}
+\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.}
 }
 \value{
 List or JSON with the details of the item.
 }
 \description{
 Get the details of an item from the EDAN API.
+}
+\details{
+All queries require valid EDAN credentials (AppID and AppKey). Consult the EDAN Docs (https://edandoc.si.edu/) for instructions on how to obtain a set of credentials.
 }

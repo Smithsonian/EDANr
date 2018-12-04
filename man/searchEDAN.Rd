@@ -17,11 +17,14 @@ searchEDAN(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE)
 
 \item{start}{Start number, to use with rows}
 
-\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.}
+\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.}
 }
 \value{
 List or JSON with the results.
 }
 \description{
 Search metadata in the EDAN API.
+}
+\details{
+All queries require valid EDAN credentials (AppID and AppKey). Consult the EDAN Docs (https://edandoc.si.edu/) for instructions on how to obtain a set of credentials.
 }

@@ -15,4 +15,10 @@ library(devtools)
 install_github("Smithsonian/EDANr")
 ```
 
+EDANr requires the packages httr, uuid, stringr, jsonlite, digest, and openssl. These should be installed automatically when using `install_github("Smithsonian/EDANr")`. To install these manually:
+
+```R
+install.packages(c("httr", "uuid", "stringr", "jsonlite", "digest", "openssl"))
+```
+
 Feel free to make request or suggestions by [opening an issue](https://github.com/Smithsonian/EDANr/issues). 

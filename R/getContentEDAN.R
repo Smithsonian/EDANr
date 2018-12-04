@@ -2,12 +2,14 @@
 #' 
 #'Get the details of an item from the EDAN API.
 #'
+#'All queries require valid EDAN credentials (AppID and AppKey). Consult the EDAN Docs (https://edandoc.si.edu/) for instructions on how to obtain a set of credentials.
+#'
 #' @return List or JSON with the details of the item.
 #'
 #' @param itemID ID of the item
 #' @param AppID AppID used for authentication
 #' @param AppKey Key for the AppID used for authentication
-#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as json.
+#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.
 #'
 #'
 #' @export
