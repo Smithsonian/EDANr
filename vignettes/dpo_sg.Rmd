@@ -28,7 +28,9 @@ AppID = "APP_ID"
 AppKey = "verylong_key"
 
 #Required packages
-library(c("EDANr", "magick", "stringr"))
+library("EDANr")
+library("magick")
+library("stringr")
 
 #Create folders to store images
 #Horizontal images
