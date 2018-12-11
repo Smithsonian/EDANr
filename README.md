@@ -1,6 +1,6 @@
 # EDANr
 
-A package to query Smithsonian's Enterprise Digital Asset Network (EDAN) from R. Currently, the package allows to query metadata and obtain details of a single item using the item ID. 
+A package to query Smithsonian's Enterprise Digital Asset Network (EDAN) API from R. Currently, the package allows to query metadata and obtain details of a single item using the item ID. 
 
 All queries require valid EDAN credentials (AppID and AppKey). Consult the [EDAN Docs](https://edandoc.si.edu/) for instructions on how to obtain a set of credentials.
 
