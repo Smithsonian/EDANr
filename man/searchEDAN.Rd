@@ -4,7 +4,9 @@
 \alias{searchEDAN}
 \title{Searches EDAN}
 \usage{
-searchEDAN(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE)
+searchEDAN(query, AppID = NA, AppKey = NA,
+  search_application = "collections", rows = 10, start = 0,
+  returnjson = FALSE)
 }
 \arguments{
 \item{query}{Query to run}
@@ -13,11 +15,13 @@ searchEDAN(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE)
 
 \item{AppKey}{Key for the AppID used for authentication}
 
+\item{search_application}{Which Search Application to use, either "collections" or "metadata"}
+
 \item{rows}{Number of rows to return, max is 100.}
 
 \item{start}{Start number, to use with rows}
 
-\item{returnjson}{If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.}
+\item{returnjson}{Boolean to return the answer as JSON, otherwise as a list.}
 }
 \value{
 List or JSON with the results.

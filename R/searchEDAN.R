@@ -9,9 +9,10 @@
 #' @param query Query to run
 #' @param AppID AppID used for authentication
 #' @param AppKey Key for the AppID used for authentication
+#' @param search_application Which Search Application to use, either "collections" or "metadata"
 #' @param rows Number of rows to return, max is 100.
 #' @param start Start number, to use with rows
-#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.
+#' @param returnjson Boolean to return the answer as JSON, otherwise as a list.
 #'
 #' @export
 #' @importFrom httr GET
@@ -24,11 +25,23 @@
 #' @importFrom httr content
 
 #' 
-searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = FALSE){
+searchEDAN <- function(query, AppID = NA, AppKey = NA, search_application = "collections", rows = 10, start = 0, returnjson = FALSE){
   
   if (rows > 100){
     warning("The number of rows has been set to the maximum allowed of 100")
     rows <- 100
+  }
+  
+  if (!any(search_application == c("collections", "metadata"))){
+    stop("Error: search_application can only be 'collections' or 'metadata'.")
+  }
+  
+  if (is.na(AppID) || AppID == ""){
+    stop("Error: AppID can not be empty.")
+  }
+  
+  if (is.na(AppKey) || AppKey == ""){
+    stop("Error: AppKey can not be empty.")
   }
   
   API_url <- 'https://edan.si.edu/'
@@ -52,7 +65,7 @@ searchEDAN <- function(query, AppID, AppKey, rows = 10, start = 0, returnjson = 
   EncodedString <- openssl::base64_encode(bin = HashedString)
 
   #API url
-  url <- paste0(API_url, 'metadata/v2.0/collections/search.htm?', QueryParameters)
+  url <- paste0(API_url, search_application, '/v2.0/collections/search.htm?', QueryParameters)
 
   r <- httr::GET(url = url,
                  httr::add_headers("X-AppId" = AppID,
