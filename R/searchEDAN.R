@@ -65,9 +65,9 @@ searchEDAN <- function(query, AppID = NA, AppKey = NA, search_application = "col
   EncodedString <- openssl::base64_encode(bin = HashedString)
 
   #API url
-  url <- paste0(API_url, search_application, '/v2.0/collections/search.htm?', QueryParameters)
+  api_url <- paste0(API_url, 'metadata/v2.0/', search_application, '/search.htm?', QueryParameters)
 
-  r <- httr::GET(url = url,
+  r <- httr::GET(url = api_url,
                  httr::add_headers("X-AppId" = AppID,
                              "X-Nonce"= Nonce,
                              "X-RequestDate"= RequestDate,
