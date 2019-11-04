@@ -15,7 +15,23 @@
 #listID references the string which most commonly can be found attached to object groups. IE https://americanhistory.si.edu/collections/object-groups/tokuno-gift has the object list with the id "p2a-1502402857224-1502899539095-0".
 
 #Default query parameter includes objectGroupId, other parameters can be see in the docs at https://edandoc.si.edu/apidocs/#api-metadata-getObjectLists
-
+#'
+#' @param listID The string which most commonly can be found attached to object groups. IE https://americanhistory.si.edu/collections/object-groups/tokuno-gift has the object list with the id "p2a-1502402857224-1502899539095-0".
+#' @param AppID AppID used for authentication
+#' @param AppKey Key for the AppID used for authentication
+#' @param returnjson If FALSE (default), converts the answer from EDAN to a list. If TRUE, returns the answer as JSON.
+#'
+#'
+#' @export
+#' @importFrom httr GET
+#' @importFrom uuid UUIDgenerate
+#' @importFrom stringr str_replace_all
+#' @importFrom jsonlite fromJSON
+#' @importFrom digest digest
+#' @importFrom openssl base64_encode
+#' @importFrom httr add_headers
+#' @importFrom httr content
+#' 
 getObjectList <- function(listID, AppID, AppKey, returnjson = FALSE){
   
   API_url <- 'https://edan.si.edu/'

@@ -4,30 +4,41 @@
 #  AppKey = "verylong_key"
 #  
 #  #Required packages
-#  library(c("EDANr", "magick", "stringr"))
+#  library("EDANr")
+#  library("magick")
+#  library("stringr")
 #  
 #  #Create folders to store images
-#  # wide images
-#  dir.create("images_w", showWarnings = FALSE)
-#  # tall images
+#  #Horizontal images
 #  dir.create("images_h", showWarnings = FALSE)
-#  
-#  #EDAN query
+#  #Vertical images
+#  dir.create("images_v", showWarnings = FALSE)
+
+## ---- eval=FALSE---------------------------------------------------------
+#  #EDAN query for orchids of Smithsonian Gardens with images
 #  orchids_query <- "orchid+smithsonian+gardens&fq=online_media_type:\"Images\""
 #  
-#  #Check for number of results
-#  results <- EDANr::searchEDAN(query = orchids_query, AppID = AppID, AppKey = AppKey, rows = 1, start = 0)
+#  #Get number of results in EDAN
+#  results <- EDANr::searchEDAN(query = orchids_query,
+#                               AppID = AppID,
+#                               AppKey = AppKey,
+#                               rows = 1,
+#                               start = 0)
 #  results_count <- results$rowCount
 #  
-#  data <- data.frame(stringsAsFactors = FALSE, row.names = FALSE)
-#  
+#  #Calculate the number of steps needed to get all the results,
+#  # in steps of 100 rows each, the maximum the API returns
 #  steps <- floor(results_count/100)
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  #Loop over each step
+#  #Loop over each step, getting all the images
 #  for (i in seq(0, steps)){
 #    #Query to get the next 100 results
-#    results <- EDANr::searchEDAN(query = orchids_query, AppID = AppID, AppKey = AppKey, rows = 100, start = (i*100))
+#    results <- EDANr::searchEDAN(query = orchids_query,
+#                                 AppID = AppID,
+#                                 AppKey = AppKey,
+#                                 rows = 100,
+#                                 start = (i*100))
 #  
 #    #If there are results in this step
 #    if (!is.null(dim(results$rows))){
@@ -42,15 +53,13 @@
 #  }
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  #Get images available from IDS
+#  #Get images, available from IDS
 #  ids_images <- results$rows$content$descriptiveNonRepeating$online_media$media[j][[1]]
 #  
-#  #Filter images which were taken by the vendor
+#  #Filter for images that were taken by the contractor of the project
 #  which_image <- ids_images[stringr::str_which(ids_images$caption, "Creekside Digital"),]
 #  
-#  #Get image of the whole plant, coded with '101' in the filename
-#  which_image_whole <- which_image[stringr::str_which(ids_images$idsId, "101"),]
-#  #Get close-up image of the flowers of the plant, coded with '102' in the filename
+#  #Select the close-up image of the flowers of the plant, coded with '102' in the filename
 #  which_image_detail <- which_image[stringr::str_which(ids_images$idsId, "102"),]
 
 ## ---- eval=FALSE---------------------------------------------------------
@@ -60,61 +69,87 @@
 #  #Get image ID
 #  idsID <- which_image_detail$idsId[1]
 #  
-#  localimage <- paste0("images/" ,idsID, ".jpg")
-#              localimage_w <- paste0("images_w/" ,idsID, ".jpg")
-#              localimage_h <- paste0("images_h/" ,idsID, ".jpg")
-#              dlfile <- try(download.file(url = image, destfile = localimage, mode = "wb"), silent = TRUE)
+#  #Download the image
+#  localimage <- paste0(idsID, ".jpg")
+#  dlfile <- try(download.file(url = image,
+#                              destfile = localimage,
+#                              mode = "wb"),
+#                silent = TRUE)
 #  
-#  
+#  #If there is an error, skip and
+#  # go to the next one in the loop
+#  if (class(dlfile) == "try-error"){
+#      next
+#    }
 
 ## ---- eval=FALSE---------------------------------------------------------
-#  common_name <- unlist(results$rows$content$indexedStructured$common_name[j])[[1]]
-#                if (is.null(common_name)){
-#                  common_name <- ""
-#                }
-#  
+#  #Read image to find size
 #  img <- image_read(localimage)
 #  img_info <- image_info(img)
 #  
-#  #4k
 #  if (img_info$width > img_info$height){
-#    #Horizontal
+#    #Horizontal, resize to 3840x2160
 #    img_scaled <- image_scale(img, "3840x2160")
 #  }else{
-#    #Vertical
+#    #Vertical, resize to 2160x3840
 #    img_scaled <- image_scale(img, "2160x3840")
 #  }
-#  
+
+## ---- eval=FALSE---------------------------------------------------------
+#  #Get image title, which contains the name of the specimen
 #  img_title <- results$rows$title[j]
 #  
+#  #If title is too long, break into two lines
 #  if (nchar(img_title) > 30){
 #    img_title1 <- strsplit(img_title, " ")[[1]]
 #    spl_no <- floor(length(img_title1)/2)
 #  
-#    img_title_1 <- paste(img_title1[1:spl_no], collapse = " ")
-#    img_title_2 <- paste(img_title1[spl_no+1:(length(img_title1) - spl_no)], collapse = " ")
-#    img_title <- paste0(img_title_1, "\n   ", img_title_2)
-#  
+#    img_title_1 <- paste(img_title1[1:spl_no],
+#                         collapse = " ")
+#    img_title_2 <- paste(img_title1[spl_no+1:(length(img_title1) - spl_no)],
+#                         collapse = " ")
+#    img_title <- paste0(img_title_1,
+#                        "\n   ",
+#                        img_title_2)
 #  }
 #  
-#  if (common_name != ""){
+#  #Get common name of plant, if available
+#  common_name <- unlist(results$rows$content$indexedStructured$common_name[j])[[1]]
+#  if (!is.null(common_name)){
 #    title <- paste0(common_name, "\n", img_title)
-#  }else{
-#    title <- img_title
 #  }
 #  
-#  title <- paste0(title, "\nAccession Number: ", results$rows$content$freetext$identifier[j][[1]]$content, "\nSmithsonian Gardens")
+#  #Add the accession number and identify the unit
+#  title <- paste0(title,
+#                  "\nAccession Number: ",
+#                  results$rows$content$freetext$identifier[j][[1]]$content,
+#                  "\nSmithsonian Gardens")
 #  
-#  #4k
-#  img_ready <- image_annotate(img_scaled, title, font = 'Arial', size = 60, color = "white", gravity = "SouthWest")
+#  #Write the info to the image
+#  img_ready <- image_annotate(img_scaled,
+#                              title,
+#                              font = 'Arial',
+#                              size = 60,
+#                              color = "white",
+#                              gravity = "SouthWest")
 #  
+#  #Write image to one of two folders
 #  if (img_info$width > img_info$height){
-#    image_write(img_ready, path = localimage_w, format = "jpg")
-#    file.remove(localimage)
-#    localimage <- localimage_w
+#    #Image is wide, store in Horizontal folder
+#    image_write(img_ready,
+#                path = paste0("images_h/" ,
+#                              idsID,
+#                              ".jpg"),
+#                format = "jpg")
 #  }else{
-#    image_write(img_ready, path = localimage_h, format = "jpg")
-#    file.remove(localimage)
-#    localimage <- localimage_h
+#    #Image is tall, store in Vertical folder
+#    image_write(img_ready,
+#                path = paste0("images_v/",
+#                              idsID,
+#                              ".jpg"),
+#                format = "jpg")
 #  }
+#  
+#  #Delete original image
+#  file.remove(localimage)
 
