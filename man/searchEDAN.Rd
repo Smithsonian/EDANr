@@ -4,9 +4,14 @@
 \alias{searchEDAN}
 \title{Searches EDAN}
 \usage{
-searchEDAN(query, AppID = NA, AppKey = NA,
-  search_application = "collections", rows = 10, start = 0,
-  returnjson = FALSE)
+searchEDAN(
+  query,
+  AppID = NA,
+  AppKey = NA,
+  rows = 10,
+  start = 0,
+  returnjson = FALSE
+)
 }
 \arguments{
 \item{query}{Query to run}
@@ -14,8 +19,6 @@ searchEDAN(query, AppID = NA, AppKey = NA,
 \item{AppID}{AppID used for authentication}
 
 \item{AppKey}{Key for the AppID used for authentication}
-
-\item{search_application}{Which Search Application to use, either "collections" or "metadata"}
 
 \item{rows}{Number of rows to return, max is 100.}
 

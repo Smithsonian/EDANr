@@ -1,4 +1,4 @@
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #EDAN creds
 #  AppID = "APP_ID"
 #  AppKey = "verylong_key"
@@ -14,7 +14,7 @@
 #  #Vertical images
 #  dir.create("images_v", showWarnings = FALSE)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #EDAN query for orchids of Smithsonian Gardens with images
 #  orchids_query <- "orchid+smithsonian+gardens&fq=online_media_type:\"Images\""
 #  
@@ -30,7 +30,7 @@
 #  # in steps of 100 rows each, the maximum the API returns
 #  steps <- floor(results_count/100)
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #Loop over each step, getting all the images
 #  for (i in seq(0, steps)){
 #    #Query to get the next 100 results
@@ -52,7 +52,7 @@
 #    }
 #  }
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #Get images, available from IDS
 #  ids_images <- results$rows$content$descriptiveNonRepeating$online_media$media[j][[1]]
 #  
@@ -62,7 +62,7 @@
 #  #Select the close-up image of the flowers of the plant, coded with '102' in the filename
 #  which_image_detail <- which_image[stringr::str_which(ids_images$idsId, "102"),]
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #Get image URL
 #  image <- which_image_detail$content[1]
 #  
@@ -82,7 +82,7 @@
 #      next
 #    }
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #Read image to find size
 #  img <- image_read(localimage)
 #  img_info <- image_info(img)
@@ -95,7 +95,7 @@
 #    img_scaled <- image_scale(img, "2160x3840")
 #  }
 
-## ---- eval=FALSE---------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  #Get image title, which contains the name of the specimen
 #  img_title <- results$rows$title[j]
 #  

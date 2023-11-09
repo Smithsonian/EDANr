@@ -1,5 +1,3 @@
-![EDAN API](https://badgen.net/static/EDAN%20API/down/red)
-
 # EDANr
 
 A package to query Smithsonian's Enterprise Digital Asset Network (EDAN) API from R. Currently, the package allows to search collections or metadata and obtain details of a single item using the item ID. 

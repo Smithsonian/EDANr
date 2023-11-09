@@ -33,7 +33,7 @@ getContentEDAN <- function(itemID, AppID, AppKey, returnjson = FALSE){
   Nonce <- substr(stringr::str_replace_all(uuid::UUIDgenerate(FALSE), "-", ""), 0, 24)
 
   #Your request (example of format to enter query parameters)
-  QueryParameters <- paste0("url=", itemID)
+  QueryParameters <- paste0("id=", itemID)
 
   #This will be the value of X-AuthContent, each element is joined by a single newline
   StringToSign <- paste(Nonce, QueryParameters, RequestDate, AppKey, sep = "\n")
