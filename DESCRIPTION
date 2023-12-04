@@ -1,13 +1,13 @@
 Package: EDANr
 Type: Package
 Title: Query the EDAN API
-Version: 0.2.0
-Date: 2023-11-09
+Version: 1.0.0
+Date: 2023-12-04
 Authors@R: c(person("Luis J", "Villanueva", email = "villanueval@si.edu",
                   role = c("aut", "cre")),
             person("Greg", "Kenyon", role = c("ctb"))
                   )
-Description: R package to query the Smithsonian's EDAN API. Search either collections or metadata and obtain details of a particular item using the item ID. 
+Description: R package to query the Smithsonian's internal EDAN API. 
 License: file LICENSE
 Encoding: UTF-8
 Depends: R(>= 4.0.0)

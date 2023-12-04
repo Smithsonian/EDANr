@@ -16,10 +16,13 @@
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  #EDAN query for orchids of Smithsonian Gardens with images
-#  orchids_query <- "orchid+smithsonian+gardens&fq=online_media_type:\"Images\""
+#  orchids_query <- "orchid smithsonian gardens&fq=online_media_type:\"Images\""
+#  orchids_fqs <- "online_media_type:\"Images\""
+#  
 #  
 #  #Get number of results in EDAN
-#  results <- EDANr::searchEDAN(query = orchids_query,
+#  results <- EDANr::edan_metadata_search(query = orchids_query,
+#                               fqs = orchids_fqs,
 #                               AppID = AppID,
 #                               AppKey = AppKey,
 #                               rows = 1,
@@ -34,7 +37,8 @@
 #  #Loop over each step, getting all the images
 #  for (i in seq(0, steps)){
 #    #Query to get the next 100 results
-#    results <- EDANr::searchEDAN(query = orchids_query,
+#    results <- EDANr::edan_metadata_search(query = orchids_query,
+#                                 fqs = orchids_fqs,
 #                                 AppID = AppID,
 #                                 AppKey = AppKey,
 #                                 rows = 100,
